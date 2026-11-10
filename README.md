@@ -1,1 +1,0 @@
-# banusorn.github.io
