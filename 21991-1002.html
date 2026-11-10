@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ห้องปฏิบัติการดิจิทัล: ต่อวงจร IC 21991-1002</title>
+<style>
+:root{--bg:#f4f6fb;--sf:#fff;--tx:#1b2030;--mu:#5d6580;--ac:#2563eb;--on:#16a34a;--off:#cbd2e1;--bd:#dde1ec;--bad:#dc2626;--wo:#d97706;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0f1320;--sf:#171c2e;--tx:#e8ebf5;--mu:#9aa3bf;--ac:#60a5fa;--on:#4ade80;--off:#38405a;--bd:#2a3150;--bad:#f87171;--wo:#fbbf24;color-scheme:dark}}
+:root[data-theme=dark]{--bg:#0f1320;--sf:#171c2e;--tx:#e8ebf5;--mu:#9aa3bf;--ac:#60a5fa;--on:#4ade80;--off:#38405a;--bd:#2a3150;--bad:#f87171;--wo:#fbbf24;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.6 system-ui,"Noto Sans Thai",Tahoma,sans-serif}
+header{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:10px 16px;background:var(--sf);border-bottom:1px solid var(--bd)}
+.mu{color:var(--mu)}.pg{margin-left:auto;font-weight:600;color:var(--ac)}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:10px 16px 0}
+.tabs button{white-space:nowrap;padding:7px 10px;border:1px solid var(--bd);background:var(--sf);color:var(--tx);border-radius:8px;cursor:pointer;font:inherit}
+.tabs button.act{background:var(--ac);border-color:var(--ac);color:#fff}
+main{max-width:1020px;margin:auto;padding:8px 16px 24px}main h2{margin:6px 0}
+.card,section{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:10px 14px;margin:10px 0}
+ol{margin:6px 0;padding-left:22px}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0}
+.btn{border:1px solid var(--ac);background:var(--ac);color:#fff;border-radius:6px;padding:4px 10px;cursor:pointer;font:inherit}.btn.g{background:var(--sf);color:var(--tx);border-color:var(--bd)}
+input[type=number],select{padding:3px;border:1px solid var(--bd);border-radius:6px;background:var(--sf);color:var(--tx);font:inherit;width:70px}select{width:auto}
+.scroll{overflow:auto;border:1px solid var(--bd);border-radius:10px}
+.board{display:block;background:var(--sf);touch-action:none;user-select:none;min-width:980px}
+.body{fill:var(--bg);stroke:var(--mu)}.body.on{fill:color-mix(in srgb,var(--on) 30%,var(--bg))}.sel .body{stroke:var(--ac);stroke-width:2.5}
+.pin{fill:var(--off);stroke:var(--mu);cursor:crosshair}.pin:hover,.pin.hot{fill:var(--ac)}
+text{fill:var(--tx)}.t{font-size:11px;font-weight:600}.l{font-size:9px;fill:var(--mu)}.wt{fill:var(--bad)}
+path.w{fill:none;stroke-width:3;cursor:pointer;opacity:.9}
+.lc{fill:var(--off);stroke:var(--mu)}.lc.on{fill:#ef4444}.sg{fill:var(--off)}.sg.on{fill:#ef4444}
+.warn{color:var(--bad);font-weight:600}
+</style></head>
+<body>
+<div id="app"><p style="padding:2rem">กำลังโหลด… (ต้องใช้ Vue 3)</p></div>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>tailwind.config={darkMode:'media',theme:{extend:{colors:{sf:'var(--sf)',pg:'var(--bg)',tx:'var(--tx)',mu:'var(--mu)',ac:'var(--ac)',bd:'var(--bd)'}}}}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.4.21/vue.global.prod.min.js"></script>
+<script>
+//ENGINE
+const H=v=>v==null||v>=1.4?1:0;
+const SEG=['1111110','0110000','1101101','1111001','0110011','1011011','1011111','1110000','1111111','1111011'];
+const I=(nm,o)=>({nm,...o});
+const quad=(f,G)=>({n:14,v:14,g:7,G,ev:c=>G.forEach(([a,b,y])=>c.o(y,f(c.i(a),c.i(b))))});
+const Q1=[[1,2,3],[4,5,6],[10,9,8],[13,12,11]];
+const nt=hy=>({n:14,v:14,g:7,G:[[1,2],[3,4],[5,6],[9,8],[11,10],[13,12]],ev(c){this.G.forEach(([a,y])=>{if(!hy)return c.o(y,!c.i(a));const x=c.v(a),s=c.s;if(x==null||x>=1.7)s['h'+a]=1;else if(x<=.9)s['h'+a]=0;c.o(y,!(s['h'+a]??1))})}});
+const ff=(c,k,ck,cl,pr,Q,N,f,ed)=>{const s=c.s,e=c.edge(ck);let q=s['q'+k]||0;if(!c.i(cl))q=0;else if(!c.i(pr))q=1;else if(e==ed)q=f(q);s['q'+k]=q;c.o(Q,q);c.o(N,1-q)};
+const bits=(c,ps)=>ps.reduce((v,p,k)=>v|c.i(p)<<k,0);
+const IC={
+'7400':I('4×NAND',quad((a,b)=>1-(a&b),Q1)),
+'7402':I('4×NOR',quad((a,b)=>1-(a|b),[[2,3,1],[5,6,4],[8,9,10],[11,12,13]])),
+'7404':I('6×NOT',nt(0)),'7414':I('6×Schmitt NOT',nt(1)),
+'7408':I('4×AND',quad((a,b)=>a&b,Q1)),'7432':I('4×OR',quad((a,b)=>a|b,Q1)),'7486':I('4×XOR',quad((a,b)=>a^b,Q1)),
+'7483':I('Adder 4 บิต',{n:16,v:5,g:12,L:'A4 S3 A3 B3 - S2 B2 A2 S1 A1 B1 - C0 C4 S4 B4',ev:c=>{const t=bits(c,[10,8,3,1])+bits(c,[11,7,4,16])+c.i(13);[9,6,2,15].forEach((p,k)=>c.o(p,t>>k&1));c.o(14,t>>4&1)}}),
+'7485':I('Comparator 4 บิต',{n:16,v:16,g:8,L:'B3 A<Bi A=Bi A>Bi A>B A=B A<B - B0 A0 B1 A1 A2 B2 A3',ev:c=>{const a=bits(c,[10,12,13,15]),b=bits(c,[9,11,14,1]),e=a==b;c.o(5,a>b||(e&&c.i(4)));c.o(6,e&&c.i(3));c.o(7,a<b||(e&&c.i(2)))}}),
+'74148':I('Priority Enc 8→3',{n:16,v:16,g:8,L:'4 5 6 7 EI A2 A1 - A0 0 1 2 3 GS EO',ev:c=>{let k=-1;[10,11,12,13,1,2,3,4].forEach((p,j)=>{if(!c.i(p))k=j});if(c.i(5)){[9,7,6,14,15].forEach(p=>c.o(p,1))}else{const y=k<0?7:7-k;[9,7,6].forEach((p,j)=>c.o(p,y>>j&1));c.o(14,k<0);c.o(15,k>=0)}}}),
+'74138':I('Decoder 3→8',{n:16,v:16,g:8,L:'A B C G2A G2B G1 Y7 - Y6 Y5 Y4 Y3 Y2 Y1 Y0',ev:c=>{const s=bits(c,[1,2,3]),en=c.i(6)&&!c.i(4)&&!c.i(5);[15,14,13,12,11,10,9,7].forEach((p,k)=>c.o(p,!(en&&k==s)))}}),
+'7447':I('BCD→7-Seg',{n:16,v:16,g:8,L:'B C LT BI RBI D A - e d c b a g f',ev:c=>{const n=bits(c,[7,1,2,6]),sg=!c.i(3)?'1111111':!c.i(4)?'0000000':n<10?SEG[n]:'0000000';[13,12,11,10,9,15,14].forEach((p,k)=>c.o(p,sg[k]!='1'))}}),
+'74151':I('MUX 8:1',{n:16,v:16,g:8,L:'D3 D2 D1 D0 Y W E - C B A D7 D6 D5 D4',ev:c=>{const d=c.i([4,3,2,1,15,14,13,12][bits(c,[11,10,9])]),y=c.i(7)?0:d;c.o(5,y);c.o(6,1-y)}}),
+'7474':I('Dual D-FF',{n:14,v:14,g:7,L:'CLR1 D1 CK1 PR1 Q1 Q1’ - Q2’ Q2 PR2 CK2 D2 CLR2',ev:c=>{ff(c,0,3,1,4,5,6,()=>c.i(2),1);ff(c,1,11,13,10,9,8,()=>c.i(12),1)}}),
+'7476':I('Dual JK-FF (ขอบตก)',{n:16,v:5,g:13,L:'CK1 PR1 CLR1 J1 - CK2 PR2 CLR2 J2 Q2’ Q2 K2 - Q1’ Q1 K1',ev:c=>{const jk=(j,k)=>q=>j&k?1-q:j?1:k?0:q;ff(c,0,1,3,2,15,14,q=>jk(c.i(4),c.i(16))(q),-1);ff(c,1,6,8,7,11,10,q=>jk(c.i(9),c.i(12))(q),-1)}}),
+'555':I('Timer (Astable)',{n:8,v:8,g:1,L:'GND TRG OUT RST CTL THR DIS VCC',ev:c=>{c.s.ok=c.same(2,6);c.o(3,c.i(4)&&c.s.ok?(c.s.o|0):0)}}),
+'7490':I('Decade Counter',{n:14,v:5,g:10,L:'CKB R01 R02 - - R91 R92 QC QB - QD QA - CKA',ev:c=>{const s=c.s,ea=c.edge(14),eb=c.edge(1);s.a=s.a||0;s.b=s.b||0;
+ if(c.i(6)&&c.i(7)){s.a=1;s.b=4}else if(c.i(2)&&c.i(3)){s.a=0;s.b=0}else{if(ea==-1)s.a^=1;if(eb==-1)s.b=(s.b+1)%5}
+ c.o(12,s.a);c.o(9,s.b&1);c.o(8,s.b>>1&1);c.o(11,s.b>>2&1)}}),
+'74161':I('Counter 4 บิต',{n:16,v:16,g:8,L:'CLR CLK A B C D ENP - LD ENT QD QC QB QA RCO',ev:c=>{const s=c.s,e=c.edge(2);let n=s.n||0;if(!c.i(1))n=0;else if(e==1){if(!c.i(9))n=bits(c,[3,4,5,6]);else if(c.i(7)&&c.i(10))n=(n+1)&15}
+ s.n=n;[14,13,12,11].forEach((p,k)=>c.o(p,n>>k&1));c.o(15,n==15&&c.i(10))}}),
+'74194':I('Universal Shift Reg',{n:16,v:16,g:8,L:'CLR SR A B C D SL - S1 S0 CLK QD QC QB QA',ev:c=>{const s=c.s,e=c.edge(11);let q=s.q||0;if(!c.i(1))q=0;else if(e==1){const m=c.i(9)<<1|c.i(10);
+ if(m==3)q=bits(c,[3,4,5,6]);else if(m==1)q=((q<<1)&14)|c.i(2);else if(m==2)q=(q>>1)|c.i(7)<<3}
+ s.q=q;[15,14,13,12].forEach((p,k)=>c.o(p,q>>k&1))}}),
+'7489':I('RAM 16×4 (เอาต์พุตกลับค่า)',{n:16,v:16,g:8,L:'A0 ME WE D1 O1 D2 O2 - O3 D3 O4 D4 A3 A2 A1',ev:c=>{const m=c.s.m=c.s.m||Array(16).fill(0),a=bits(c,[1,15,14,13]),d=bits(c,[4,6,10,12]),O=[5,7,9,11];
+ if(c.i(2))O.forEach(p=>c.o(p,1));else{if(!c.i(3))m[a]=d;O.forEach((p,k)=>c.o(p,1-((c.i(3)?m[a]:d)>>k&1)))}}}),
+'ROM':I('ROM 16×4 (จำลอง)',{n:16,v:16,g:8,L:'A0 A1 A2 A3 CE Q1 Q2 - Q3 Q4',ev:c=>{const d=[1,2,4,8,4,2,1,0,3,6,12,9,15,0,5,10][bits(c,[1,2,3,4])];[6,7,9,10].forEach((p,k)=>c.o(p,!c.i(5)&&d>>k&1))}}),
+'4N25':I('Optocoupler',{n:4,v:0,g:0,L:'IN - - OUT',ev:c=>c.o(4,c.i(1))})};
+const lab=D=>{const a=Array(D.n).fill('');if(D.G)D.G.forEach((g,k)=>g.forEach((p,j)=>a[p-1]=(k+1)+(g.length==2?'AY':'ABY')[j]));else D.L.split(' ').forEach((x,i)=>a[i]=x=='-'?'':x);if(D.v)a[D.v-1]='VCC';if(D.g)a[D.g-1]='GND';return a};
+function solve(P,W){
+ const par={},f=k=>{if(par[k]===undefined)par[k]=k;while(par[k]!==k){par[k]=par[par[k]];k=par[k]}return k};
+ W.forEach(w=>{par[f(w[0]+'.'+w[1])]=f(w[2]+'.'+w[3])});
+ let nv={},err={};
+ for(let it=0;it<40;it++){
+  nv={};err={};
+  P.forEach(p=>{for(const k in p.out){const v=p.out[k],r=f(p.id+'.'+k);if(nv[r]===undefined)nv[r]=v;else if(nv[r]!==v)err[r]=1}});
+  let ch=0;
+  P.forEach(p=>{const D=IC[p.type];if(!D)return;
+   const val=k=>{const r=f(p.id+'.'+k);return err[r]?null:nv[r]},
+   c={s:p.st,v:val,i:k=>H(val(k)),o:(k,b)=>{p.out[k]=b?5:0},same:(a,b)=>f(p.id+'.'+a)===f(p.id+'.'+b),
+   edge:k=>{const pc=p.st.pc=p.st.pc||{};if(val(k)==null){delete pc[k];return 0}const cu=c.i(k),pr=pc[k]??cu;pc[k]=cu;return pr==cu?0:cu?1:-1}};
+   const b4=JSON.stringify(p.out);p.out={};
+   p.st.pw=!D.v||(val(D.v)>=4&&val(D.g)<=.8);
+   if(p.st.pw)D.ev(c);
+   if(JSON.stringify(p.out)!=b4)ch=1});
+  if(!ch)break}
+ P.forEach(p=>{if(p.type=='RELAY'){const r=f(p.id+'.1'),on=!err[r]&&nv[r]>=2;if(p.st.on&&!on&&!p.props.d)p.st.sp=Date.now();p.st.on=on?1:0}});
+ return{nv,err,f}}
+//END
+const LB={SW:'สวิตช์',PB:'ปุ่มกด (พัลส์)',LED:'LED',VCC:'+5V',GND:'GND',CLK:'นาฬิกา',SENS:'เซนเซอร์',RELAY:'รีเลย์+หลอด',SEG:'7-Segment'};
+const GEO={SW:{w:56,h:26,p:[[1,56,13]]},PB:{w:56,h:26,p:[[1,56,13]]},CLK:{w:76,h:26,p:[[1,76,13]]},LED:{w:40,h:26,p:[[1,0,13]]},VCC:{w:56,h:26,p:[[1,56,13]]},GND:{w:56,h:26,p:[[1,56,13]]},SENS:{w:140,h:26,p:[[1,140,13]]},RELAY:{w:130,h:56,p:[[1,0,28]]},
+ SEG:{w:130,h:130,p:[...'abcdefg'].map((l,k)=>[k+1,0,14+k*16,l])}};
+const R7=[[10,4,40,8],[48,14,8,34],[48,52,8,34],[10,88,40,8],[4,52,8,34],[4,14,8,34],[10,46,40,8]];
+const mk=(t,x,y,id)=>{const p={id,type:t,x,y,st:{},out:{},props:{}};
+ if(t=='SW'||t=='PB'){p.st.v=0;p.out[1]=0}else if(t=='VCC')p.out[1]=5;else if(t=='GND')p.out[1]=0;else if(t=='SENS'){p.props.v=0;p.out[1]=0}
+ else if(t=='CLK'){p.st.on=0;p.props.hz=1;p.out[1]=0}else if(t=='555')p.props={r1:1,r2:10,c:10};else if(t=='RELAY')p.props.d=1;return p};
+const pre=(t,ins,ck,outs,tie={},seg,xw=[])=>{const P=[],W=[];let n=0;const add=(ty,x,y)=>{P.push(mk(ty,x,y,++n));return n};
+ const V=add('VCC',150,8),Gd=add('GND',150,44),ic=add(t,330,70),D=IC[t];W.push([V,1,ic,D.v],[Gd,1,ic,D.g]);
+ ins.forEach((p,k)=>W.push([add('SW',30,12+k*34),1,ic,p]));
+ ck.forEach((p,k)=>W.push([add('PB',30,12+(ins.length+k)*34),1,ic,p]));
+ Object.entries(tie).forEach(([p,v])=>W.push([v=='V'?V:Gd,1,ic,+p]));
+ outs.forEach((p,k)=>W.push([ic,p,add('LED',560,70+k*30),1]));
+ if(seg){const s=add('SEG',560,70);seg.forEach((p,k)=>W.push([ic,p,s,k+1]))}
+ xw.forEach(w=>W.push(w));return{parts:P,wires:W,n}};
+const PRE=[()=>pre('7408',[1,2],[],[3]),
+ ()=>pre('7483',[10,8,3,1,11,7,4,16,13],[],[9,6,2,15,14]),
+ ()=>pre('7485',[10,12,13,15,9,11,14,1],[],[5,6,7],{2:'G',3:'V',4:'G'}),
+ ()=>pre('7447',[6,2,1,7],[],[],{3:'V',4:'V',5:'V'},[13,12,11,10,9,15,14]),
+ ()=>pre('7474',[2],[3],[5,6],{1:'V',4:'V'}),
+ ()=>pre('7490',[],[14],[12,9,8,11],{2:'G',3:'G',6:'G',7:'G'},null,[[3,12,3,1]]),
+ ()=>pre('7489',[1,15,14,13,4,6,10,12,3],[],[5,7,9,11],{2:'G'}),
+ ()=>({parts:[mk('VCC',150,8,1),mk('GND',150,44,2),mk('SENS',30,100,3),mk('7414',330,70,4),mk('RELAY',560,110,5)],wires:[[1,1,4,14],[2,1,4,7],[3,1,4,1],[4,2,4,3],[4,4,5,1]],n:5})];
+const U=[
+{t:'ลอจิกเกตพื้นฐาน',h:'3/12/15',pal:['7408','7432','7404','7400','7402','7486'],s:['วาง IC, +5V, GND แล้วต่อ VCC และ GND เข้าขาจ่ายไฟของ IC (7408/7400: ขา 14 และ 7) ถ้าไม่ต่อ IC จะไม่ทำงาน','ต่อสวิตช์เข้าอินพุตและเอาต์พุตเข้า LED แล้วบันทึกตารางความจริง AND, OR, NOT, NAND, NOR, XOR','ใช้ 7400 (NAND) ล้วนสร้าง NOT, AND และ OR (Universal Gate)','สังเกต: ขาอินพุตที่ปล่อยลอยจะอ่านเป็น 1 (TTL)'],p:'แผงวงจรทดสอบลอจิกเกตพื้นฐาน + ตารางบันทึกผล'},
+{t:'วงจรคำนวณทางคณิตศาสตร์ไบนารี',h:'2/8/10',pal:['7486','7408','7432','7483'],s:['Half Adder = XOR (Sum) + AND (Carry) จาก 7486 และ 7408','Full Adder = Half Adder 2 ชุด + OR (7432)','7483: A1–A4, B1–B4, C0 = Cin, S1–S4, C4 = Carry out','วงจรลบ: ใช้ 7486 กลับบิต B ด้วยสวิตช์ M แล้วต่อ M เข้า C0 (2’s Complement)'],p:'แผงวงจรบวก-ลบเลขไบนารี 4 บิตแสดงผลด้วย LED'},
+{t:'วงจรเปรียบเทียบและตรวจสอบข้อมูล',h:'2/8/10',pal:['7485','7486','7404','7432','7408'],s:['7485: ต่ออินพุตขยาย A>B=0, A=B=1, A<B=0 สำหรับตัวเดี่ยว','Cascade 8 บิต: เอาต์พุตของ IC ต่ำ ไปอินพุตขยายของ IC สูง','Parity Generator: ต่อ 7486 เป็นต้นไม้ XOR ข้อมูล 4 บิต แล้วต่อ XOR กับพาริตี้ที่รับมา ถ้าได้ 0 แปลว่าถูกต้อง','พลิกสวิตช์ 1 บิตระหว่างทางเพื่อจำลองสัญญาณรบกวน'],p:'แผงวงจรเปรียบเทียบข้อมูลและตรวจจับข้อผิดพลาด'},
+{t:'วงจรแปลงรหัสและขับหลอดแสดงผล',h:'3/12/15',pal:['74148','74138','7447','74151','SEG','7404','7432'],s:['74148: อินพุตและเอาต์พุต Active-Low ต่อ EI = 0','74138: Decoder / DEMUX (G1=1, G2A=G2B=0)','7447 ขับ 7-Segment แอโนดร่วม ต่อ LT, BI, RBI = 1 (จริงต้องใส่ R ≈ (5−2)/10 mA = 300 Ω ต่อทุกเซกเมนต์)','74151: MUX 8:1 ต่อ E = 0','ตรวจซ่อม: ลองไม่ต่อ GND หรือสลับสาย a–g แล้วหาสาเหตุ'],p:'แผงวงจรถอดรหัสเลือกช่องสัญญาณและขับ 7-Segment แสดง 0–9'},
+{t:'ฟลิปฟลอปและกำเนิดสัญญาณนาฬิกา',h:'2/8/10',pal:['7400','7402','7474','7476','555','PB','CLK'],s:['SR Latch: NAND 2 ตัวต่อไขว้ (ใช้กันสวิตช์กระดอน)','7474 D-FF: CLR และ PR ต้อง = 1; ต่อ Q’ เข้า D ได้ตัวหารสอง','7476 JK (ทริกเกอร์ขอบตก): J=K=1 สลับค่า','555: ต่อขา 2 กับ 6 เข้าด้วยกัน คลิกชิ้นส่วนเพื่อตั้ง R1, R2, C แล้วต่อ OUT เข้า CLK ของ FF'],p:'แผงวงจรกำเนิดพัลส์ปรับค่าได้พร้อมฟลิปฟลอปควบคุมสถานะ'},
+{t:'วงจรนับและวงจรเลื่อนข้อมูล',h:'3/12/15',pal:['7490','74161','74194','7474','7447','SEG','PB','CLK','7408','7400'],s:['7490: ต่อ QA → CKB เป็นตัวนับ 0–9, R0 และ R9 ต่อ GND','พ่วง 2 หลัก: QD ของหลักหน่วย → CKA หลักสิบ (ทริกเกอร์ขอบตก) แล้วต่อ 7447 + SEG','Mod-N: 74161 + 7400 ตรวจค่า N แล้วป้อนเข้า CLR','74194: S1S0 = 01 เลื่อนขวา, 10 เลื่อนซ้าย, 11 โหลดขนาน (ทดลอง SISO/SIPO/PISO/PIPO)','Ring: QD → SR · Johnson: QD ผ่าน 7404 → SR'],p:'แผงวงจรนับเลขฐานสิบ 2 หลัก (00–99) และวงจรควบคุมลำดับไฟวิ่ง'},
+{t:'หน่วยความจำดิจิทัล',h:'1/4/5',pal:['7489','ROM','74161','PB','CLK'],s:['7489: ME = 0; WE = 0 คือเขียน D1–D4 ที่แอดเดรส A0–A3; WE = 1 คืออ่าน','เอาต์พุต O1–O4 เป็นค่ากลับ (LED ติดเมื่อบิตข้อมูลเป็น 0)','ROM (จำลอง): CE = 0, ต่อ A0–A3 กับ 74161 ที่นับด้วยนาฬิกา แล้วต่อ Q1–Q4 เข้า LED ได้ไฟวิ่งตามข้อมูล ROM'],p:'แผงวงจรจำลองการจัดเก็บและเรียกอ่านข้อมูลหน่วยความจำพร้อมไฟแสดงผล'},
+{t:'ประยุกต์ควบคุมอุปกรณ์ภายนอก',h:'2/8/10',pal:['7414','SENS','4N25','RELAY','7404','7408'],s:['คลิกเซนเซอร์เพื่อปรับแรงดัน สังเกต Hysteresis ของ 7414 (ติดที่ ≈1.7 V ดับที่ ≈0.9 V)','4N25: ใส่ระหว่างวงจรดิจิทัลกับโหลดเพื่อแยกกราวด์','รีเลย์: ถอดไดโอด Flyback ออกแล้วดูคำเตือนแรงดันพุ่งตอนตัด','ระบบอัตโนมัติ: เซนเซอร์ AND สวิตช์เปิดระบบ (7408) → รีเลย์ → หลอดไฟ'],p:'ชุดควบคุมอุปกรณ์ไฟฟ้าภายนอกอัตโนมัติด้วยลอจิกดิจิทัลผ่านเซนเซอร์'}];
+let PAR=k=>k;
+const COM=['VCC','GND','SW','LED'];
+createApp=Vue.createApp;
+createApp({data:()=>({i:0,U,bds:U.map(()=>({parts:[],wires:[],n:0})),nv:{},err:{},sel:null,pend:null,mp:[0,0],drag:null,tm:null,R7,IC:Vue.markRaw(IC)}),
+computed:{B(){return this.bds[this.i]},parts(){return this.B.parts},wires(){return this.B.wires},cur(){return this.U[this.i]},
+ pal(){return[...COM,...this.cur.pal]},selP(){return this.parts.find(p=>p.id==this.sel)},
+ f555(){const r=this.selP.props;return(1440/((r.r1+2*r.r2)*r.c)).toFixed(2)},d555(){const r=this.selP.props;return(100*(r.r1+r.r2)/(r.r1+2*r.r2)).toFixed(1)}},
+watch:{i(){this.sel=null;this.pend=null;this.solve()}},
+mounted(){this.solve();this.tm=setInterval(this.tick,100)},beforeUnmount(){clearInterval(this.tm)},
+methods:{
+ solve(){const r=solve(this.parts,this.wires);PAR=r.f;this.nv=r.nv;this.err=r.err},
+ val(id,k){const r=PAR(id+'.'+k);return this.err[r]?null:this.nv[r]},
+ lbl(t){return IC[t]?t+' '+IC[t].nm:LB[t]},
+ G(p){const g=GEO[p.type];if(g)return{w:g.w,h:g.h,pins:g.p.map(([n,x,y,l])=>({n,x,y,l:l||''}))};
+  const D=IC[p.type],L=lab(D),W=130,h=D.n/2,pins=[];for(let n=1;n<=D.n;n++)pins.push(n<=h?{n,x:0,y:40+(n-1)*18,l:L[n-1]}:{n,x:W,y:40+(D.n-n)*18,l:L[n-1]});return{w:W,h:44+h*18,pins}},
+ title(p){const t=p.type;return IC[t]?t+' '+IC[t].nm:t=='SW'?'SW '+p.st.v:t=='CLK'?'CLK '+p.props.hz+'Hz':t=='SENS'?'เซนเซอร์ '+p.props.v+'V':t=='RELAY'?'รีเลย์+หลอด':t=='LED'?'':t=='VCC'?'+5V':t=='SEG'?'7-SEG':t},
+ lb(p,q){return IC[p.type]?(q.x==0?q.n+' '+q.l:q.l+' '+q.n):q.l},
+ pt(id,n){const p=this.parts.find(x=>x.id==id);if(!p)return[0,0];const q=this.G(p).pins.find(x=>x.n==n);return[p.x+q.x,p.y+q.y]},
+ path(w){const a=this.pt(w[0],w[1]),b=this.pt(w[2],w[3]);return`M${a[0]} ${a[1]}C${a[0]+50} ${a[1]} ${b[0]-50} ${b[1]} ${b[0]} ${b[1]}`},
+ wc(w){if(this.err[PAR(w[0]+'.'+w[1])])return'var(--bad)';const v=this.val(w[0],w[1]);return v==null?'var(--wo)':v>=2?'var(--on)':'#64748b'},
+ hi(p){const v=this.val(p.id,1);return v!=null&&v>=2},
+ sg(p,k){const v=this.val(p.id,k+1);return v!=null&&v<=.8},
+ spk(p){return p.st.sp&&Date.now()-p.st.sp<2500},
+ add(t){const n=++this.B.n;this.parts.push(mk(t,30+(n%7)*28,20+(n%9)*34,n));this.solve()},
+ demo(){const r=PRE[this.i]();this.B.parts=r.parts;this.B.wires=r.wires;this.B.n=r.n;this.sel=null;this.pend=null;this.solve()},
+ clear(){this.B.parts=[];this.B.wires=[];this.sel=null;this.pend=null;this.solve()},
+ del(){const id=this.sel;this.B.wires=this.wires.filter(w=>w[0]!=id&&w[2]!=id);this.B.parts=this.parts.filter(p=>p.id!=id);this.sel=null;this.solve()},
+ xy(e){const s=this.$refs.sv,pt=s.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const m=pt.matrixTransform(s.getScreenCTM().inverse());return[m.x,m.y]},
+ dn(e,p){const[x,y]=this.xy(e);this.sel=p.id;this.drag={p,ox:x-p.x,oy:y-p.y,sx:x,sy:y,m:0}},
+ mv(e){const[x,y]=this.xy(e);this.mp=[x,y];const d=this.drag;if(!d)return;if(Math.abs(x-d.sx)+Math.abs(y-d.sy)>4)d.m=1;if(d.m){d.p.x=Math.max(0,Math.round(x-d.ox));d.p.y=Math.max(0,Math.round(y-d.oy))}},
+ up(){const d=this.drag;this.drag=null;if(!d||d.m)return;const p=d.p;
+  if(p.type=='SW'){p.st.v^=1;p.out[1]=p.st.v?5:0;this.solve()}
+  else if(p.type=='PB'){p.st.v=1;p.out[1]=5;this.solve();setTimeout(()=>{p.st.v=0;p.out[1]=0;this.solve()},250)}},
+ pc(p,n){if(!this.pend)this.pend=[p.id,n];else{if(this.pend[0]!=p.id||this.pend[1]!=n){this.wires.push([...this.pend,p.id,n]);this.solve()}this.pend=null}},
+ setV(v){const p=this.selP;p.props.v=+v;p.out[1]=+v;this.solve()},
+ tick(){let ch=0;this.parts.forEach(p=>{
+  if(p.type=='CLK'){p.st.t=(p.st.t||0)+100;if(p.st.t>=500/p.props.hz){p.st.t=0;p.st.on^=1;p.out[1]=p.st.on?5:0;ch=1}}
+  if(p.type=='555'&&p.st.pw&&p.st.ok){const r=p.props,th=.693*(r.r1+r.r2)*r.c,tl=.693*r.r2*r.c;p.st.t=(p.st.t||0)+100;if(p.st.t>=Math.max(p.st.o?th:tl,100)){p.st.t=0;p.st.o=(p.st.o||0)^1;ch=1}}});
+  if(ch)this.solve()}},
+template:`<div><header class="flex flex-wrap items-center gap-3 px-4 py-3 bg-sf border-b border-bd shadow-sm"><b class="text-lg font-bold text-ac">🔌 ห้องปฏิบัติการดิจิทัลเบื้องต้น: ต่อวงจรด้วย IC จริง</b><span class="text-sm text-mu bg-pg rounded-full px-3 py-0.5">21991-1002</span></header>
+<div class="tabs flex gap-2 overflow-x-auto px-4 pt-3 pb-1"><button class="whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium shadow-sm transition hover:-translate-y-0.5 hover:shadow-md" v-for="(u,n) in U" :key="n" :class="{act:n==i}" @click="i=n">{{n+1}}. {{u.t}}</button></div>
+<main class="space-y-3"><h2 class="text-xl font-bold md:text-2xl">หน่วยที่ {{i+1}} {{cur.t}}</h2><p class="text-sm text-mu">ทฤษฎี/ปฏิบัติ/รวม {{cur.h}} ชม. · ชิ้นงาน: {{cur.p}}</p>
+<div class="card rounded-xl border-l-4 border-l-ac shadow-sm"><b class="text-ac">ขั้นตอนการทดลอง</b><ol class="mt-1 list-decimal space-y-1 pl-5 text-sm"><li v-for="s in cur.s" :key="s">{{s}}</li></ol></div>
+<div class="row"><b>ชิ้นส่วน:</b><button class="btn g rounded-full px-3 py-1 text-sm shadow-sm transition hover:bg-ac hover:text-white" v-for="t in pal" :key="t" @click="add(t)">+ {{lbl(t)}}</button></div>
+<div class="row"><button class="btn rounded-lg px-4 py-1.5 font-medium shadow transition hover:opacity-90" @click="demo">โหลดวงจรตัวอย่าง</button><button class="btn g rounded-lg px-4 py-1.5 transition hover:bg-red-500 hover:text-white" @click="clear">ล้างบอร์ด</button>
+<span class="mu">คลิกขา → คลิกขาปลายทางเพื่อต่อสาย · คลิกสายเพื่อลบ · ลากเพื่อย้าย · คลิกสวิตช์เพื่อสลับ · สายเขียว=1 เทา=0 ส้ม=ลอย แดง=ลัดวงจร</span></div>
+<div class="scroll rounded-xl shadow-md"><svg ref="sv" class="board" viewBox="0 0 980 620" width="980" height="620" @pointermove="mv" @pointerup="up" @pointerleave="up" @click="pend=null;sel=null">
+<g v-for="(w,k) in wires" :key="k" @click.stop="wires.splice(k,1);solve()"><path class="w" :d="path(w)" :stroke="wc(w)"><title>คลิกเพื่อลบสาย</title></path></g>
+<line v-if="pend" :x1="pt(pend[0],pend[1])[0]" :y1="pt(pend[0],pend[1])[1]" :x2="mp[0]" :y2="mp[1]" stroke="var(--ac)" stroke-dasharray="5 4" stroke-width="2"/>
+<g v-for="p in parts" :key="p.id" :transform="'translate('+p.x+','+p.y+')'" :class="{sel:sel==p.id}" @pointerdown.stop="dn($event,p)" @click.stop>
+<rect class="body" :class="{on:p.st.v==1||p.st.on==1}" :width="G(p).w" :height="G(p).h" rx="6"/>
+<text class="t" x="6" y="16">{{title(p)}}</text>
+<circle v-if="p.type=='LED'" cx="26" cy="13" r="8" :class="['lc',{on:hi(p)}]"/>
+<circle v-if="p.type=='RELAY'" cx="100" cy="28" r="12" :class="['lc',{on:hi(p)}]"/>
+<text v-if="p.type=='RELAY'&&spk(p)" class="t wt" x="6" y="50">⚡ แรงดันพุ่ง!</text>
+<text v-if="IC[p.type]&&!p.st.pw" class="t wt" x="6" y="30">ไม่มีไฟเลี้ยง</text>
+<g v-if="p.type=='SEG'" transform="translate(64,12) scale(.9)"><rect v-for="(r,k) in R7" :key="k" :x="r[0]" :y="r[1]" :width="r[2]" :height="r[3]" rx="3" :class="['sg',{on:sg(p,k)}]"/></g>
+<g v-for="q in G(p).pins" :key="q.n"><circle class="pin" :class="{hot:pend&&pend[0]==p.id&&pend[1]==q.n}" :cx="q.x" :cy="q.y" r="5" @pointerdown.stop @click.stop="pc(p,q.n)"/>
+<text class="l" :x="q.x?q.x-9:9" :y="q.y+3" :text-anchor="q.x?'end':'start'">{{lb(p,q)}}</text></g></g></svg></div>
+<section v-if="selP"><div class="row"><b>{{title(selP)||selP.type}}</b><button class="btn g" @click="del">ลบชิ้นส่วน</button>
+<template v-if="selP.type=='555'"><label>R1 <input type="number" min="0.1" step="0.1" v-model.number="selP.props.r1"> kΩ</label><label>R2 <input type="number" min="0.1" step="0.1" v-model.number="selP.props.r2"> kΩ</label><label>C <input type="number" min="0.1" step="0.1" v-model.number="selP.props.c"> µF</label><b>f ≈ {{f555}} Hz · Duty {{d555}}%</b><span class="mu">(ต้องต่อขา 2 กับ 6 เข้าด้วยกัน)</span></template>
+<label v-if="selP.type=='SENS'">แรงดัน <input type="range" min="0" max="5" step="0.1" :value="selP.props.v" @input="setV($event.target.value)"> {{selP.props.v}} V</label>
+<label v-if="selP.type=='CLK'">ความถี่ <select v-model.number="selP.props.hz"><option>1</option><option>2</option><option>4</option></select> Hz</label>
+<label v-if="selP.type=='RELAY'"><input type="checkbox" :checked="selP.props.d" @change="selP.props.d=+$event.target.checked"> มีไดโอด Flyback</label></div></section>
+</main></div>`}).mount('#app');
+</script></body></html>
